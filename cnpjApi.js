@@ -1,9 +1,10 @@
 const consultarCNPJ = require("consultar-cnpj");
-const token = "DHoTG3PWtsUGaC1xkVvCMzOWbdKAjZu7L7l4r4fPOWzb";
 const Sequelize = require("sequelize");
 const { QueryTypes } = require("sequelize");
 const dotenv = require("dotenv");
 dotenv.config();
+
+const token = process.env.TOKEN;
 
 const sequelize = new Sequelize("eduard72_" + process.env.DATABASE + "", "eduard72_wp625", "37@S0DSm(p", {
   host: "sh-pro20.hostgator.com.br",
