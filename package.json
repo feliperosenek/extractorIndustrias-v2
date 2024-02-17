@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "start": "nodemon cnpjApi.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "consultar-cnpj": "^1.0.15",
+    "dotenv": "^16.4.4",
+    "jsdom": "^19.0.0",
+    "minimist": "^1.2.5",
+    "mysql2": "^2.3.3",
+    "puppeteer": "^13.3.2",
+    "qs": "^6.11.2",
+    "selenium-webdriver": "^4.1.1",
+    "sequelize": "^6.17.0"
+  }
+}
