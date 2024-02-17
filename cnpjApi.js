@@ -28,7 +28,7 @@ async function getCNPJ() {
 
   try {
     // --> Pesquisa os CNAE's no banco
-    var cnaes = await sequelize.query("SELECT id, cnae FROM "+process.env.TABLE+" WHERE statusBot" + process.env.BOT + "=0", {
+    var cnaes = await sequelize.query("SELECT id, cnae FROM "+process.env.TABLE_CNAE+" WHERE statusBot" + process.env.BOT + "=0", {
       type: QueryTypes.SELECT,
     });
 
@@ -180,7 +180,7 @@ async function getCNPJ() {
         pages = await data.paginacao.paginas;
       }
       // --> Informa que o cnae já foi usado
-          await sequelize.query("UPDATE "+process.env.TABLE+" SET statusBot" + process.env.BOT + "=1 WHERE cnae=" + cnaesSearch + "");
+          await sequelize.query("UPDATE "+process.env.TABLE_CNAE+" SET statusBot" + process.env.BOT + "=1 WHERE cnae=" + cnaesSearch + "");
 
     }
   } catch (error) {
