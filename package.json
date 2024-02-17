@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "nodemon cnpjApi.js",
+    "start": "node cnpjApi.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
