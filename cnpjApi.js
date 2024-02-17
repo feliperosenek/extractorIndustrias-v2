@@ -180,7 +180,8 @@ async function getCNPJ() {
         pages = await data.paginacao.paginas;
       }
       // --> Informa que o cnae já foi usado
-      await sequelize.query("UPDATE cnaes SET statusBot" + process.env.BOT + "=1 WHERE cnae=" + cnaesSearch + "");
+          await sequelize.query("UPDATE "+process.env.TABLE+" SET statusBot" + process.env.BOT + "=1 WHERE cnae=" + cnaesSearch + "");
+
     }
   } catch (error) {
     console.log(error);
