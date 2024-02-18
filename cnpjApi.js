@@ -31,8 +31,16 @@ async function getCNPJ() {
     var cnaes = await sequelize.query("SELECT id, cnae FROM "+process.env.TABLE_CNAE+" WHERE statusBot" + process.env.BOT + "=0", {
       type: QueryTypes.SELECT,
     });
-
+    
+    console.log("->> Extractor Industrias <<--")
+    console.log("----------->> bot "+process.env.BOT+" <<------------")
+    console.log()
+    console.log("CNAE's disponíveis")
     console.log(cnaes)
+    console.log()
+
+    console.log("Iniciando pesquisa...........")
+    console.log()
 
     // --> Abre um loop para pesquisar sobre os cnaes
     for (i = 0; i < cnaes.length; i++) {
@@ -58,7 +66,32 @@ async function getCNPJ() {
         pageRound = data.paginacao.paginas;
       }
 
+      const verPag = await sequelize.query("SELECT paginacaoBot" + process.env.BOT + " FROM `cnaes2` WHERE cnae=" + cnaesSearch + "", {
+        type: QueryTypes.SELECT,
+      });
+
+      var bot = "paginacaoBot"+process.env.BOT
+      var somaPaginas = verPag[0][bot]
+      somaPaginas = parseInt(somaPaginas)
+
+      console.log("Paginação BD: "+somaPaginas)
+      console.log()
+
+      if(somaPaginas >= process.env.PAGINAS){
+        pageRound=0
+      }
+
+
       for (var t = 0; t < pageRound; t++) {
+
+        const pagination = await sequelize.query("SELECT paginacaoBot" + process.env.BOT + " FROM `cnaes2` WHERE cnae=" + cnaesSearch + "", {
+          type: QueryTypes.SELECT,
+        });
+  
+        var botPagination = "paginacaoBot"+process.env.BOT
+        var paginasSoma = pagination[0][botPagination]
+        paginasSoma = parseInt(paginasSoma)
+
         // --> Define uma página aleatória
         if (data.paginacao.paginas > process.env.PAGINAS) {
           page = Math.floor(Math.random() * data.paginacao.paginas) + 1;
@@ -66,15 +99,19 @@ async function getCNPJ() {
           page = t + 1;
         }
 
-        console.log("Página: " + page + "  | " + (i + 1) + "º de " + cnaes.length);
+        console.log("Página: " + page + "  | " + (i + 1) + "º de " + cnaes.length+" | ( "+ (t+1)+" ) "+"Pagination  -> "+(paginasSoma+1));
 
         // --> Pesquisa por página
+
+        if(paginasSoma >= process.env.PAGINAS){
+
+        }else{
 
         const data2 = await consultarCNPJ.pesquisa(
           {
             // --> Consulta o CNAE
             atividade_principal_id: cnaesSearch,
-            estado_id: process.env.ESTADO_ID,
+            estado_id: process.env.ESTADO_ID
           },
           token,
           page
@@ -162,7 +199,7 @@ async function getCNPJ() {
           if (verificaDuplicata != "" || nome.includes("'") || endereco.includes("'") || bairro.includes("'") || municipio.includes("'") || telefone == "" || email == "" || fantasia.includes("'") || tipo_logradouro.includes("'")) {
           } else {
             try {
-              await sequelize.query("INSERT INTO catalogo (nome,cnpj, fantasia, endereco, tipo_logradouro, numero,complemento, bairro, cep, municipio, uf,pais,ddd_telefone, telefone, email, ddd_telefone2, telefone2, capital, cnae, produto_1, produto_2, produto_3, matriz, filial,ano_fundacao,produtos,materias_primas,nro_funcionarios,importa,exporta, porte) VALUES ('" + nome + "','" + cnpj + "','" + fantasia + "','" + endereco + "','" + tipo_logradouro + "','" + numero + "','" + complemento + "','" + bairro + "','" + cep + "','" + municipio + "','" + uf + "','" + pais + "','" + ddd_telefone + "','" + telefone + "','" + email + "','" + ddd_telefone2 + "','" + telefone2 + "','" + capital + "','" + cnae + "','" + produto_1 + "','" + produto_2 + "','" + produto_3 + "','" + matriz + "','" + filial + "','" + fundacao + "',0,0,0,0,0,'" + porte + "' ) ");
+             await sequelize.query("INSERT INTO catalogo (nome,cnpj, fantasia, endereco, tipo_logradouro, numero,complemento, bairro, cep, municipio, uf,pais,ddd_telefone, telefone, email, ddd_telefone2, telefone2, capital, cnae, produto_1, produto_2, produto_3, matriz, filial,ano_fundacao,produtos,materias_primas,nro_funcionarios,importa,exporta, porte) VALUES ('" + nome + "','" + cnpj + "','" + fantasia + "','" + endereco + "','" + tipo_logradouro + "','" + numero + "','" + complemento + "','" + bairro + "','" + cep + "','" + municipio + "','" + uf + "','" + pais + "','" + ddd_telefone + "','" + telefone + "','" + email + "','" + ddd_telefone2 + "','" + telefone2 + "','" + capital + "','" + cnae + "','" + produto_1 + "','" + produto_2 + "','" + produto_3 + "','" + matriz + "','" + filial + "','" + fundacao + "',0,0,0,0,0,'" + porte + "' ) ");
               res = 1;
             } catch {
               console.log("ERRO MYSQL <-------------");
@@ -175,12 +212,28 @@ async function getCNPJ() {
           }
 
           console.log("  ✔  " + nome + res);
+         
         }
+      }
+
+        const paginacaoBD = await sequelize.query("SELECT paginacaoBot" + process.env.BOT + " FROM `cnaes2` WHERE cnae=" + cnaesSearch + "", {
+          type: QueryTypes.SELECT,
+        });
+
+        var pag = "paginacaoBot"+process.env.BOT
+
+        somaPag = paginacaoBD[0][pag]
+        somaPag = parseInt(somaPag)
+        somaPag = somaPag+1
+      
+
+        await sequelize.query("UPDATE "+process.env.TABLE_CNAE+" SET paginacaoBot" + process.env.BOT + "="+somaPag+" WHERE cnae=" + cnaesSearch + "");
+
 
         pages = await data.paginacao.paginas;
       }
       // --> Informa que o cnae já foi usado
-          await sequelize.query("UPDATE "+process.env.TABLE_CNAE+" SET statusBot" + process.env.BOT + "=1 WHERE cnae=" + cnaesSearch + "");
+      await sequelize.query("UPDATE "+process.env.TABLE_CNAE+" SET statusBot" + process.env.BOT + "=1 WHERE cnae=" + cnaesSearch + "");
 
     }
   } catch (error) {
