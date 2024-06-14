@@ -46,8 +46,7 @@ async function getCNPJ() {
     for (i = 0; i < cnaes.length; i++) {
       cnaesSearch = cnaes[i].cnae;
 
-      // pesquisa por cnae
-      const data = await consultarCNPJ.pesquisa(
+       data = await consultarCNPJ.pesquisa(
         {
           atividade_principal_id: cnaesSearch,
           estado_id: process.env.ESTADO_ID,
@@ -56,7 +55,7 @@ async function getCNPJ() {
         token,
         1
       );
-
+     
       console.log("cnae id: " + cnaes[i].id + " - CNAE: " + cnaesSearch + " - total: " + data.paginacao.total + "  |" + (i + 1) + "º de " + cnaes.length + " | Páginas: " + data.paginacao.paginas);
       console.log(" - - " + process.env.ACAO + " - - ");
 
@@ -66,7 +65,7 @@ async function getCNPJ() {
         pageRound = data.paginacao.paginas;
       }
 
-      const verPag = await sequelize.query("SELECT paginacaoBot" + process.env.BOT + " FROM `cnaes2` WHERE cnae=" + cnaesSearch + "", {
+      const verPag = await sequelize.query("SELECT paginacaoBot" + process.env.BOT + " FROM `cnaes` WHERE cnae=" + cnaesSearch + "", {
         type: QueryTypes.SELECT,
       });
 
@@ -84,7 +83,7 @@ async function getCNPJ() {
 
       for (var t = 0; t < pageRound; t++) {
 
-        const pagination = await sequelize.query("SELECT paginacaoBot" + process.env.BOT + " FROM `cnaes2` WHERE cnae=" + cnaesSearch + "", {
+        const pagination = await sequelize.query("SELECT paginacaoBot" + process.env.BOT + " FROM `cnaes` WHERE cnae=" + cnaesSearch + "", {
           type: QueryTypes.SELECT,
         });
   
@@ -196,7 +195,7 @@ async function getCNPJ() {
           });
 
           // --> Filtros para inserir no banco de dados
-          if (verificaDuplicata != "" || nome.includes("'") || endereco.includes("'") || bairro.includes("'") || municipio.includes("'") || telefone == "" || email == "" || fantasia.includes("'") || tipo_logradouro.includes("'")) {
+          if (verificaDuplicata != "" || nome.includes("'") || endereco.includes("'") || bairro.includes("'") || municipio.includes("'") || fantasia.includes("'") || tipo_logradouro.includes("'")) {
           } else {
             try {
              await sequelize.query("INSERT INTO catalogo (nome,cnpj, fantasia, endereco, tipo_logradouro, numero,complemento, bairro, cep, municipio, uf,pais,ddd_telefone, telefone, email, ddd_telefone2, telefone2, capital, cnae, produto_1, produto_2, produto_3, matriz, filial,ano_fundacao,produtos,materias_primas,nro_funcionarios,importa,exporta, porte) VALUES ('" + nome + "','" + cnpj + "','" + fantasia + "','" + endereco + "','" + tipo_logradouro + "','" + numero + "','" + complemento + "','" + bairro + "','" + cep + "','" + municipio + "','" + uf + "','" + pais + "','" + ddd_telefone + "','" + telefone + "','" + email + "','" + ddd_telefone2 + "','" + telefone2 + "','" + capital + "','" + cnae + "','" + produto_1 + "','" + produto_2 + "','" + produto_3 + "','" + matriz + "','" + filial + "','" + fundacao + "',0,0,0,0,0,'" + porte + "' ) ");
@@ -216,7 +215,7 @@ async function getCNPJ() {
         }
       }
 
-        const paginacaoBD = await sequelize.query("SELECT paginacaoBot" + process.env.BOT + " FROM `cnaes2` WHERE cnae=" + cnaesSearch + "", {
+        const paginacaoBD = await sequelize.query("SELECT paginacaoBot" + process.env.BOT + " FROM `cnaes` WHERE cnae=" + cnaesSearch + "", {
           type: QueryTypes.SELECT,
         });
 
