@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node cnpjApi.js",
+    "start": "node verificaAtiva.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
