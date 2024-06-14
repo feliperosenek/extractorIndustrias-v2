@@ -41,8 +41,7 @@ async function getCNPJ() {
     if (cadastro == "Ativa") {
       console.log(nome+" - "+cadastro)
       try {
-        await sequelize.query("UPDATE `catalogo` SET atualizado=3 WHERE cnpj='" + cnpj + "'");
-        await sequelize.query("UPDATE `catalogo` SET ativa='sim' WHERE cnpj='" + cnpj + "'");
+        await sequelize.query("UPDATE `catalogo` SET atualizado=3, ativa = 'sim' WHERE cnpj='" + cnpj + "'");
         res = 1;
       } catch (error){        
         console.log("ERRO MYSQL <-------------");
@@ -51,10 +50,8 @@ async function getCNPJ() {
     } else {
       console.log(nome+" - "+cadastro)
     }
-
-  }
-
   await new Promise(resolve => setTimeout(resolve, 1000));
+  }
   }catch(error){
     console.log(error)
   }
