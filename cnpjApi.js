@@ -195,10 +195,10 @@ async function getCNPJ() {
           });
 
           // --> Filtros para inserir no banco de dados
-          if (verificaDuplicata != "" || nome.includes("'") || endereco.includes("'") || bairro.includes("'") || municipio.includes("'") || fantasia.includes("'") || tipo_logradouro.includes("'")) {
+          if (verificaDuplicata != "" || nome.includes("'") || endereco.includes("'") || bairro.includes("'") || municipio.includes("'") || fantasia.includes("'") || tipo_logradouro.includes("'"))  || cadastro != "Ativa") {
           } else {
             try {
-             await sequelize.query("INSERT INTO catalogo (nome,cnpj, fantasia, endereco, tipo_logradouro, numero,complemento, bairro, cep, municipio, uf,pais,ddd_telefone, telefone, email, ddd_telefone2, telefone2, capital, cnae, produto_1, produto_2, produto_3, matriz, filial,ano_fundacao,produtos,materias_primas,nro_funcionarios,importa,exporta, porte) VALUES ('" + nome + "','" + cnpj + "','" + fantasia + "','" + endereco + "','" + tipo_logradouro + "','" + numero + "','" + complemento + "','" + bairro + "','" + cep + "','" + municipio + "','" + uf + "','" + pais + "','" + ddd_telefone + "','" + telefone + "','" + email + "','" + ddd_telefone2 + "','" + telefone2 + "','" + capital + "','" + cnae + "','" + produto_1 + "','" + produto_2 + "','" + produto_3 + "','" + matriz + "','" + filial + "','" + fundacao + "',0,0,0,0,0,'" + porte + "' ) ");
+             await sequelize.query("INSERT INTO catalogo (nome,cnpj, fantasia, endereco, tipo_logradouro, numero,complemento, bairro, cep, municipio, uf,pais,ddd_telefone, telefone, email, ddd_telefone2, telefone2, capital, cnae, produto_1, produto_2, produto_3, matriz, filial,ano_fundacao,produtos,materias_primas,nro_funcionarios,importa,exporta, porte, ativa) VALUES ('" + nome + "','" + cnpj + "','" + fantasia + "','" + endereco + "','" + tipo_logradouro + "','" + numero + "','" + complemento + "','" + bairro + "','" + cep + "','" + municipio + "','" + uf + "','" + pais + "','" + ddd_telefone + "','" + telefone + "','" + email + "','" + ddd_telefone2 + "','" + telefone2 + "','" + capital + "','" + cnae + "','" + produto_1 + "','" + produto_2 + "','" + produto_3 + "','" + matriz + "','" + filial + "','" + fundacao + "',0,0,0,0,0,'" + porte + "','" + cadastro + "' ) ");
               res = 1;
             } catch {
               console.log("ERRO MYSQL <-------------");
